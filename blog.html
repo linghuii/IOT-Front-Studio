@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/blog.css">
+    <title>博客</title>
+
+</head>
+<body>
+<div class="container-fluid">
+    <div class="header">
+        <nav class="navbar navbar-expand-md navbar-dark">
+            <a class="navbar-brand" href="#">
+                <img src="images/logo.png" alt="logo" style="width:100px;height: 68.5px">
+            </a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+                <ul class="navbar-nav ">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">简介</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">公告</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">博客</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">作品展示</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">动态</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3 col-sm-10 offse-sm-1 col-12">
+            <!-- 博客标题栏 -->
+            <div class="blog-head">
+                <!--<h1 class="blog-title">我是博文</h1>-->
+                <!--<div class="blog-data">-->
+                <!--<span class="blog-publish-time">2019日04月32年/</span>-->
+                <!--<span class="blog-author">作者：雷神/</span>-->
+                <!--<span class="blog-visit-numb">游览量：3000次</span>-->
+                <!--</div>-->
+                <!--<div class="blog-type">-->
+                <!--<span class="badge badge-primary">主要</span>-->
+                <!--<span class="badge badge-secondary">次要</span>-->
+                <!--<span class="badge badge-success">成功</span>-->
+                <!--</div>-->
+            </div>
+            <hr />
+            <!-- 博客正文 -->
+            <div class="blog-text">
+
+            </div>
+
+            <hr />
+            <h6>亲亲，如果看完有更好的建议一定要留下哟(＾Ｕ＾)ノ~ＹＯ</h6>
+            <!-- 评论区 -->
+            <div class="comment">
+                <form action="#" method="post">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="name" placeholder="昵称">
+                    </div>
+                    <div class="form-group">
+                        <textarea class="form-control" id="comment" rows="5"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-block">提交</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!--回到顶部-->
+<p id="back-top">
+    <a href="#top">
+        <span>^</span>
+    </a>
+</p>
+
+<script src="assent/jquery/dist/jquery.js" type="text/javascript"></script>
+<script src="js/bootstrap.min.js" type="text/javascript"></script>
+<script src="js/common.js" type="text/javascript"></script>
+<script src="assent/layer/layer.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var local = location.href;
+    var loLength = local.length;
+    var lospot = local.indexOf("=");//取得=的位置
+    var blogid = decodeURI(local.substr(lospot + 1,loLength - lospot));
+
+    $(function() {
+        backTop();
+        $.ajax({
+            url:API.getAPI(API.getBlogByBlogId),
+            type:"get",
+            dataType:"json",
+            data:{
+                blogId:blogid,
+            },
+            beforeSend:function () {
+                layer.load();
+            },
+            success:function (res) {
+                if (res.status == 1){
+                    console.log(res);
+                    var data = res.data;
+                    c=data.publishTime
+                    c=c.substring(0,10);
+                    a=data.tags;
+                    b=a.split(',');
+                    $(".blog-head").append('<h1 class="blog-title">' + data.title + '</h1>\n' +
+                        '<div class="blog-data">\n' +
+                        '<span class="blog-publish-time">' + c + "/" + '</span>\n' +
+                        '<span class="blog-author">' + '作者：'+ data.author+ "/" + '</span>' +
+                        '<span class="blog-visit-numb">' + '游览量：'+data.view + '</span>' +
+                        '</div>\n' +
+                        '<div class="blog-type">\n' +
+                        '<span class="badge badge-primary">' + b[0] + '</span>\n' +
+                        '<span class="badge badge-secondary">'+b[1]+'</span>\n' +
+                        '<span class="badge badge-success">'+b[2]+'</span>\n' +
+                        '</div>'
+
+                    );
+                    $(".blog-text").append(
+                    '<p>'+ data.content+'</p>'
+                    )
+                }
+            },
+            error:function (res) {
+                alert(res.status)
+            },
+            complete:function () {
+                layer.close(layer.load());
+            }
+        });
+    });
+
+    /**
+     * 回到顶部
+     */
+    function backTop() {
+        //先hide这个返回顶部#back-top
+        $("#back-top").hide();
+        //以fade in的方式加载出#back-top
+        $(window).scroll(function() {
+            if ($(this).scrollTop() > 500) {
+                $('#back-top').fadeIn();
+            } else {
+                $('#back-top').fadeOut();
+            }
+        });
+        // 点击返回顶部
+        $('#back-top a').click(function() {
+            $('body,html').animate({
+                scrollTop: 0
+            }, 800);
+            return false;
+        });
+    }
+</script>
+</body>
+
+</html>

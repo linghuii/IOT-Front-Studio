@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="zh-cn">
+<head>
+
+    <meta charset="UTF-8">
+    <!-- keywords and description -->
+    <meta name="Keywords" content="前端工作室，前端，工作室">
+    <meta name="Description"
+          content="This is the portal of the front-end studio of Information Engineering College of Sichuan Agricultural University.">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/fullpage.min.css">
+    <link rel="stylesheet" href="css/templatemo-style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/allNotice.css">
+
+    <title>公告</title>
+</head>
+<body>
+<div class="backcolor">
+    <!-- header and navbar -->
+    <header id="header">
+        <div class="container-fluid">
+            <div class="navbar">
+                <div><a href="index.html">首&nbsp;&nbsp;页</a></div>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- main content 主体内容 -->
+    <div class="container">
+        <div class="title">公告</div>
+        <div class="list-group" id="notice">
+            <h3><!-- 留白 --></h3>
+
+
+        </div>
+    </div>
+</div>
+</body>
+<script src="assent/jquery/dist/jquery.js"></script>
+<script src="assent/layer/layer.js"></script>
+<script src="js/common.js"></script>
+<script>
+    var backcolor = document.getElementsByClassName('backcolor')[0];
+    backcolor.style.minHeight = window.innerHeight + 'px'
+    $.ajax({
+        url: API.getAPI(API.notice),
+        type: "get",
+        dataType: "json",
+        data: {},
+        beforeSend: function () {
+            layer.load();
+        },
+        success: function (data) {
+            console.log(data);
+            if (data.status == 1) {
+                data = data.data;
+                $.each(data, function (index, message) {
+                    var a=message.noticeDate;
+                    a = a.substring(0,a.lastIndexOf("."));
+                    $("#notice").append(
+                        '<button class="list-group-item" onclick=enitNotice(\''+message.id+'\') style="margin-bottom: 20px ">' +
+                        '<h5 class="list-group-item-heading">' +
+                        message.title +
+                        '</h5>' +
+                            '<p>'+ a +'</p>'+
+                        '</button> '
+                    )
+                });
+                $("#notice").append(
+                    '<h3>' + '</h3>')
+                ;
+
+            }
+        },
+        error: function (data) {
+            layer.alert(data.msg);
+        },
+        complete: function () {
+            layer.close(layer.load());
+        }
+    });
+    function enitNotice(id){
+        window.location.href= 'notice.html?id='+id;
+    }
+</script>
+</html>

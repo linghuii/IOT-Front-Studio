@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- keywords and description -->
+    <meta name="Keywords" content="前端工作室，前端，工作室">
+    <meta name="Description"
+          content="This is the portal of the front-end studio of Information Engineering College of Sichuan Agricultural University.">
+
+    <!-- Bootstrap CSS -->
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/templatemo-style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/allNotice.css">
+
+    <title>公告</title>
+
+<body>
+<div class="bgcolor">
+    <!-- header navbar 导航条 -->
+    <header id="header">
+        <div class="container-fluid">
+            <div class="navbar">
+                <a href="allNotice.html">
+                    返&nbsp;&nbsp;回
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- main content 主体内容 -->
+    <div class="container">
+        <div class="text" id="text">
+
+        </div>
+    </div>
+</div>
+</body>
+<script src="assent/jquery/dist/jquery.js"></script>
+<script src="assent/layer/layer.js"></script>
+<script src="js/common.js"></script>
+<script>
+    var loc = location.href;
+    var n1 = loc.length;//地址的总长度
+    var n2 = loc.indexOf("=");//取得=号的位置
+    var manageId = decodeURI(loc.substr(n2 + 1, n1 - n2));
+    window.onload = function () {
+        $.ajax({
+            url: API.getAPI(API.oneNotice),
+            type: "get",
+            dataType: "json",
+            data: {
+                id: manageId,
+            },
+            beforeSend: function () {
+                layer.load();
+            },
+            success: function (data) {
+                if (data.status == 1) {
+                    var a=data.data.noticeDate;
+                    a=a.substring(0,a.lastIndexOf("."));
+                    $("#text").append(
+                        '<h3>' + data.data.title + '</h3>' +
+                        '<h6>' + a + '</h6>' +
+                        '<p>' + '&nbsp;'+'&nbsp;'+'&nbsp;'+'&nbsp;'+'&nbsp;'+'&nbsp;'+'&nbsp;'+'&nbsp;'+data.data.content + '</p>'
+                    )
+                } else {
+                    layer.alert("后台参数错误！")
+                }
+            },
+            error: function (data) {
+                layer.alert(data.msg);
+            },
+            complete: function () {
+                layer.close(layer.load());
+            }
+        })
+    }
+</script>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>works-show</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/allWorks.css">
+</head>
+<body>
+<!--主体部分-->
+<div class="box">
+    <div class="fp-tableCell">
+        <div class="section-inner">
+            <div class="welcome-box">
+                <h3 class="welcome-first animated fadeInUp" data-animate="fadeInUp">Welcome to</h3>
+                <h1 class="welcome-title animated fadeInUp" data-animate="fadeInUp">IOT'S WORKS DINAMICS</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="list">
+        <ul>
+            <li class="p7">
+                <a href="#"><img src="img/u=45003816,278531346&fm=11&gp=0.jpg" alt=""/>
+                </a>
+            </li>
+            <li class="p6"><a href="#"><img src="img/u=1005480668,1673224134&fm=26&gp=0.jpg" alt=""/></a></li>
+            <li class="p5"><a href="#"><img src="img/u=1060470795,806559895&fm=26&gp=0.jpg" alt=""/></a></li>
+            <li class="p4"><a href="#"><img src="img/u=1565761321,5783975&fm=26&gp=0.jpg" alt=""/></a></li>
+            <li class="p3"><a href="#"><img src="img/u=1714055070,1763860325&fm=26&gp=0.jpg" alt=""/></a></li>
+            <li class="p2"><a href="#"><img src="img/u=2987497190,3804081995&fm=26&gp=0.jpg" alt=""/></a></li>
+            <li class="p1"><a href="#"><img src="img/u=1496232587,926948844&fm=26&gp=0%20(1).jpg" alt=""/></a></li>
+        </ul>
+    </div>
+
+    <a href="javascript:;" class="prev btn"><</a>
+    <a href="javascript:;" class="next btn">></a>
+
+    <div class="buttons">
+        <a href="javascript:;"><span class="blue"></span></a>
+        <a href="javascript:;"><span></span></a>
+        <a href="javascript:;"><span></span></a>
+        <a href="javascript:;"><span></span></a>
+        <a href="javascript:;"><span></span></a>
+        <a href="javascript:;"><span></span></a>
+        <a href="javascript:;"><span></span></a>
+    </div>
+</div>
+<!-- contact -->
+<div class="wthree-contact" id="contact">
+    <div class="container contact">
+        <div class="part1">
+            <h3>Contact</h3>
+            <h5>Email:</h5>
+            <a href="mailto:contact@company.com">QQ邮箱</a>
+            <a href="mailto:enquiry@company.com">网易云邮箱</a>
+            <h5>地址：</h5>
+            <p>十教B406</p>
+            <p>四川农业大学信息工程学院</p>
+            <p>雅安</p>
+            <h5>电话：</h5>
+            <P>+1 284-251-0639</P>
+            <ul class="contact-icons">
+                <li><a href="#"><span class="fa fa-facebook"></a></li>
+                <li><a href="#"><span class="fa fa-twitter"></a></li>
+                <li><a href="#"><span class="fa fa-behance"></a></li>
+                <li><a href="#"><span class="fa fa-linkedin"></a></li>
+            </ul>
+        </div>
+        <div class="part2">
+            <h4>提交你的意见</h4>
+            <form>
+                <input type="text" name="name" placeholder="Your Name" required id="name">
+                <input type="email" name="email" placeholder="Your E-mail" required id="email">
+                <textarea name="message" rows="5" cols="20" placeholder="Message" id="message"></textarea>
+                <input type="submit" value="send" id="send">
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- //contact -->
+<!-- copyright -->
+<div class="agileits-w3layouts">
+    <div class="container">
+        <p>&copy; .2019IOT FRONT Company name All rights reserved. <a href="http://www.cssmoban.com/" target="_blank">前端工作室</a>
+            - Collect from <a href="http://www.cssmoban.com/" title="前端工作室" target="_blank">IOT FRONT</a></p>
+    </div>
+</div>
+<!-- //copyright -->
+<script src="jquery-3.3.1.js"></script>
+<script src="bootstrap-3.3.7-dist/js/jquery.min.js"></script>
+<script src="bootstrap-3.3.7-dist/js/show.js"></script>
+<script>
+    $('#send').click(function () {
+        var name = $("#name").val().trim();
+
+        var email = $("#email").val().trim();
+        var message = $("#message").val().trim();
+        if(name == ''|| email == ''|| message == ''){
+            alert("填写内容不能为空!")
+        }
+        else {
+            $.ajax(
+                {
+                    type: 'post',
+                    url: 'http://47.98.244.28/iotFront/v1/visitor/sendSuggestion',
+                    dataType: 'json',
+                    async: true,
+                    data: {
+                        name: name,
+                        email: email,
+                        message: message,
+                    },
+                    success: function (data) {
+                        alert("提交成功啦！");
+                        console.log(data)
+                    }
+                }
+            );
+        }
+
+    })
+
+    $(document).ready(function () {
+        $("#animate1").click(function () {
+            $("div").show();
+        })
+    })
+</script>
+</body>
+</html>

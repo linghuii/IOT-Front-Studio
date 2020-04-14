@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" /><!-- 允许跨域请求 -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css/allBlog.css">
+    <title>博文浏览</title>
+
+<body>
+<div class="container-fluid">
+    <div class="header">
+        <nav class="navbar navbar-expand-md navbar-dark">
+            <a class="navbar-brand" href="#">
+                <img src="images/logo.png" alt="logo" style="width:100px;height: 68.5px">
+            </a>
+
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="collapsibleNavbar">
+                <ul class="navbar-nav ">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="allNotice.html">公告</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">博客</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">作品展示</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">动态</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+
+    <!-- 中部博客页面 -->
+    <div class="blog">
+        <div class="row" id="blog-body">
+
+        </div>
+        <!-- 分页 -->
+        <nav aria-label="Page navigation" class="navigation" id="navigation">
+            <ul class="pagination col-md-4">
+
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+
+<script src="assent/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="js/bootstrap.min.js"></script>
+<script type="text/javascript" src="js/common.js"></script>
+<script>
+    var pageData = {
+        tempPage: 1,//当前页
+        pageSize: 12, //一页显示的数量
+        total: 0,//总数据量
+        totalPage:0//页数
+    };
+
+    $(function () {
+        uploadData();
+    });
+
+
+
+    function uploadData() {
+        $.ajax({
+            url: API.getAPI(API.getAllBlog),
+            type: "get",
+            data: {
+//                        page:pageData.tempPage,//当前页面数
+//                        page_size:pageData.pageSize	//显示长度
+            },
+            dataType: 'json', //服务器返回json格式数据
+            timeout:10000,//超时时间设置为10秒；
+            async:false,
+            beforeSend:function(){
+
+            },
+            success: function(result) {
+                if (result.status == 1) {
+                    console.log(result);
+
+                    var pageLength = getJsonLength(result);
+                    pageData.total = pageLength;
+                    //页数
+                    pageData.totalPage = Math.ceil(pageData.total / pageData.pageSize);//页数
+
+                    getAllBlog(result,pageData.tempPage);//渲染blog
+
+                } else {
+                    console.log(result.msg);
+                    alert("连不上服务器啊嘤嘤嘤的😭");
+                }
+            },
+            error: function(result) {
+                alert(result.status);
+            }
+        });
+        setBlogAnimation();//动画效果啥的
+        updatePagination();//渲染分页器
+        console.log("博文数量为" + pageData.total);
+
+    }
+    function enitblog(id) {
+        window.location.href='blog.html?id='+id;
+    }
+    /**
+     * 渲染blog数据
+     */
+    function getAllBlog(result) {
+        $("#blog-body").empty();
+        if(pageData.total-(pageData.tempPage-1)*12>0) {
+            for (var j =(pageData.tempPage-1)*12 ; j < pageData.tempPage*12; j++) {
+                $("#blog-body").append('<div class="col-md-4 col-sm-4 col-6 blog-item">\n' +
+                    '<div class="blog-item-container" onclick="enitblog(\''+result.data[j].id+'\')">\n' +
+                    '<div class="blog-item-img">\n' +
+                    '<img src="' + API.picfix + result.data[j].cover + '">\n' +
+                    '</div>\n' +
+                    '<div class="blog-item-text">\n' +
+                    '<h5>' + '<b>' + result.data[j].title + '</b>' + '</h5>\n' +
+                    '<br />\n' +
+                    '<p>' + result.data[j].brief +
+                    '</p>\n' +
+                    '</div>\n' +
+                    '</div>\n' +
+                    '</div>'
+                );
+            }
+        }
+    }
+    /**
+     * 博文动画代码
+     */
+    function setBlogAnimation() {
+        // 渲染图片响应式宽度
+        var screenWidth = window.screen.availWidth;
+        var imgLHeight = 0.3 * screenWidth;
+        var imgSHeight = 0.2 * screenWidth;
+        if (screenWidth < 500 ){
+            $(".blog-item").css("height", imgSHeight);
+            $(".blog").css("width",'100%');
+        } else {
+            $(".blog-item").css("height", imgLHeight);
+            $(".blog").css("width",'80%');
+        }
+
+        //动画效果
+        $(".blog-item-container").each(function() {
+            $(this).hover(function() {
+                $(this).children(".blog-item-text").fadeIn();
+            }, function() {
+                $(this).children(".blog-item-text").fadeOut();
+            });
+        });
+    }
+
+    /**
+     * 渲染分页器
+     */
+    function updatePagination() {
+        if(pageData.pageSize >= pageData.total){
+            console("数据只有1页");
+            $(".pagination").hide();
+        } else {
+            console.log("数据量>12");
+            $(".pagination").show();
+
+
+
+            $(".pagination").empty();
+            if (pageData.tempPage != 1){
+                $(".pagination").append('<li class="page-item">' +
+                    '<a class="page-link" href="javascript:switchPage(-1)" aria-label="Previous"\n>' +
+                    '<span aria-hidden="true">&laquo;</span>\n' +
+                    '<span class="sr-only">Previous</span>\n' +
+                    '</a>\n' +
+                    '</li>'
+                );
+            }
+            for (var i = 0; i < pageData.totalPage; i++) {
+                var active="";
+                if ((i + 1) == pageData.tempPage) {
+                    active = "active";
+                }
+                $(".pagination").append("<li class=\"page-item "+active+"\"><a class=\"page-link\" href=\"javascript:switchPage("+(i+1)+")\">"+(i+1)+"</a></li>");
+            }
+            if (pageData.tempPage != pageData.totalPage){
+                $(".pagination").append('<li class=\"page-item\">\n' +
+                    '<a class=\"page-link\" href=\"javascript:switchPage(-2)\" aria-label=\"Next\">\n' +
+                    '<span aria-hidden=\"true\">&raquo;</span>\n' +
+                    '<span class=\"sr-only\">Next</span>\n' +
+                    '</a>\n' +
+                    '</li>'
+                );
+            }
+        }
+    }
+    //翻页
+    function switchPage(page) {
+        if (page == -1){//上一页
+            if (pageData.tempPage > 1){
+                pageData.tempPage--;
+            }
+        } else if (page == -2){//下一页
+            if (Math.ceil(pageData.total / pageData.pageSize) > pageData.tempPage){
+                pageData.tempPage++;
+            }
+        } else {
+            pageData.tempPage = page;
+        }
+        uploadData();
+    }
+
+    //获取json数据的长度
+    function getJsonLength(result){
+        var jsonLength = 0;
+        for(var i = 0;i < result.data.length;i++){
+            jsonLength++;
+        }
+        return jsonLength;
+    }
+</script>
+</body>
+</html>

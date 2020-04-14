@@ -1,0 +1,65 @@
+/* index.html */
+a:hover{
+	text-decoration: none;
+}
+a{
+	text-decoration: none;
+}
+a:visited{
+	text-decoration: none;
+}
+.backcolor{
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(to bottom, #4096ee 0%,#39ced6 100%);	
+}
+#header{
+	position: static;
+}
+.title{
+	top: 0;
+	left: 0;
+	font-size: 25px;
+	font-weight: 600;
+	letter-spacing: 5px;
+}
+.list-group{
+	height: 100%;
+}
+.list-group-item{
+	height: 100%;
+	margin: 0 35px;
+	padding: 0 5px;
+	background-color: rgba(250,250,250,0.25);
+	border-radius: 10px;
+}
+.list-group-item:hover{
+	background-color: #FEFFFF;
+	color: black;
+	transition: all 0.3s;
+	/*font-size: 10px;*/
+}
+h5{
+	margin: 5px 0;
+	padding: 8px;
+	font-size: 15px;
+	letter-spacing: 1px;
+}
+/* end index.html */
+
+/* 公告.html */
+.bgcolor{
+	position: fixed;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(to bottom, #4096ee 0%,#39ced6 100%);
+}
+.text{
+	padding: 20px 15px;
+	border: 1.5px solid rgba(0,0,0,.125);
+	border-radius: 10px;	
+}
+.text p{
+	text-align: left;
+}
+/* end 公告.html */
